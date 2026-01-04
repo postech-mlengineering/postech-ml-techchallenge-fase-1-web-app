@@ -141,6 +141,8 @@ Este aplicativo é a camada de consumo final e depende da comunicação com a AP
 
 - **Repositório de Orquestração:** https://github.com/postech-mlengineering/postech-ml-techchallenge-fase-1-airflow/tree/main
 
+### Deploy
+
 O deploy deste aplicativo foi realizado via Streamlit Cloud, garantindo disponibilidade e integração contínua com este repositório.
 
 Link para o aplicativo: https://bookstoscrape.streamlit.app/
