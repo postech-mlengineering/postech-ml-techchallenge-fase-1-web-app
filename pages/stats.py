@@ -18,9 +18,9 @@ def show() -> None:
     #título
     col1, col2 = st.columns([.05, .95])
     with col1:
-        st.image('img/logo2.png', width='stretch')
+        st.image('img/collection.png', width='stretch')
     with col2:
-        st.title('Books2Scrape | Estatísticas')
+        st.title('BooksToScrape | Estatísticas')
     
     #botao de voltar
     _, col2 = st.columns([0.9, 0.1])
@@ -88,7 +88,7 @@ def show() -> None:
                 values='total',
                 names='rating',
                 hole=0.5,
-                color_discrete_sequence=pallete,
+                color_discrete_sequence=px.colors.sequential.Blues_r,
                 template='plotly_white'
             )
             fig_pie.update_layout(height=550, margin=dict(l=0, r=0, t=30, b=0))

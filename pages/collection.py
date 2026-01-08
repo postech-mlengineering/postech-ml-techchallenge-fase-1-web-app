@@ -75,9 +75,9 @@ def show() -> None:
     #título
     col1, col2 = st.columns([.05, .95])
     with col1:
-        st.image('img/logo2.png', width='stretch')
+        st.image('img/collection.png', width='stretch')
     with col2:
-        st.title('Books2Scrape | Acervo')
+        st.title('BooksToScrape | Acervo')
     #botao de voltar
     _, col2 = st.columns([0.9, 0.1])
     with col2:

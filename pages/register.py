@@ -15,16 +15,16 @@ def show() -> None:
         with col2:
             col1, col2 = st.columns([.22, .78])
             with col1:
-                st.image('img/logo2.png', width='stretch')
+                st.image('img/collection.png', width='stretch')
             with col2:
-                st.title('Books2Scrape')
+                st.title('BooksToScrape')
         st.subheader('Cadastro')
         with st.form('form_cadastro', clear_on_submit=True):
             new_user = st.text_input('Usuário', placeholder='Digite nome de usuário desejado')
             new_password = st.text_input('Senha', placeholder='Digite uma senha', type='password')
             
-            _, col2_btn = st.columns([.6, .4])
-            with col2_btn:
+            _, col2 = st.columns([.7, .3])
+            with col2:
                 cadastrar = st.form_submit_button('Cadastrar', width='stretch')
             
             if cadastrar:

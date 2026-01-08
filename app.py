@@ -5,27 +5,27 @@ from scripts import get_cookies
 PAGES_CONFIG = {
     'login': {
         'title': 'Login', 
-        'icon': 'img/logo2.ico'
+        'icon': 'img/logo.ico'
     },
     'register': {
         'title': 'Cadastro', 
-        'icon': 'img/logo2.ico'
+        'icon': 'img/logo.ico'
     },
     'menu': {
         'title': 'Menu', 
-        'icon': 'img/logo2.ico'
+        'icon': 'img/logo.ico'
     },
     'collection': {
         'title': 'Acervo', 
-        'icon': 'img/logo2.ico'
+        'icon': 'img/logo.ico'
     },
     'stats': {
         'title': 'Estatísticas', 
-        'icon': 'img/logo2.ico'
+        'icon': 'img/logo.ico'
     },
     'preferences': {
         'title': 'Preferences', 
-        'icon': 'img/logo2.ico'
+        'icon': 'img/logo.ico'
     }
 }
 

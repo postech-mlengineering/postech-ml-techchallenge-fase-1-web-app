@@ -20,9 +20,9 @@ def show() -> None:
         with col2:
             col1, col2 = st.columns([.22, .78])
             with col1:
-                st.image('img/logo2.png', width='stretch')
+                st.image('img/collection.png', width='stretch')
             with col2:
-                st.title('Books2Scrape')
+                st.title('BooksToScrape')
         st.subheader('Entrar')
         with st.form('form_login'):
             user = st.text_input('Usuário')
