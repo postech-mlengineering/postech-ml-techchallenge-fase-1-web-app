@@ -1,6 +1,6 @@
 # Repositório do Streamlit para o Tech Challenge da Fase 1 da Pós-Graduação em Machine Learning Engineering da FIAP
 
-Este repositório consiste em um aplicativo web desenvolvido com Streamlit e cujo objetivo é disponibilizar uma interface de usuário intuitiva e responsiva, projetada para o consumo das funcionalidades da API BooksToScrape.
+Este repositório consiste em um aplicativo web desenvolvido com Streamlit cujo objetivo é disponibilizar uma interface de usuário intuitiva e responsiva, projetada para o consumo das funcionalidades da API BooksToScrape.
 
 Como resultado, a solução consolidou uma experiência de navegação completa que abrange o gerenciamento de identidade, através de fluxos de cadastro e login e a exploração dinâmica do catálogo por meio de filtros de preço, gênero e título. Ademais, o aplicativo integra-se ao motor de recomendação para fornecer recomendações personalizadas e disponibiliza um dashboards para a visualização de indicadores do acervo.
 
@@ -63,7 +63,7 @@ curl -sSL https://install.python-poetry.org | python3 -
 
 ### Instalação
 
-Clone o repositório e instale as dependências listadas no `pyproject.toml`:
+Clone o repositório e instale as dependências:
 
 ```bash
 git clone https://github.com/jorgeplatero/postech-ml-techchallenge-fase-1-streamlit.git
@@ -75,15 +75,11 @@ poetry install
 
 **Docker:**
 
-Execute o comando abaixo para subir o ambiente completo (API + Dependências):
-
 ```bash
 docker-compose up --build
 ```
 
 **Local:**
-
-Para iniciar o servidor do Streamlit localmente:
 
 ```bash
 poetry run streamlit run main.py
@@ -124,25 +120,25 @@ Painel analítico para visualização de métricas de negócio e distribuição 
 
 | Componente | Tecnologia | Versão | Descrição |
 | :--- | :--- | :--- | :--- |
-| **Frontend/App** | **Streamlit** | `^1.51.0` | Framework utilizado para a construção da interface interativa e dashboard |
-| **Visualização** | **Plotly** | `^6.5.0` | Biblioteca de gráficos interativos para representação estatística dos dados |
-| **Data Analysis** | **Pandas** | `^2.3.3` | Biblioteca utilizada para manipulação de dataframes e estruturação de tabelas |
-| **Comunicação** | **Requests** | `^2.32.5` | Biblioteca para realizar requisições HTTP à API central e consumo de JSON |
-| **Sessão** | **Cookies Controller**| `^0.0.3` | Ferramenta para gestão de persistência de tokens JWT e estado do usuário |
-| **Linguagem** | **Python** | `>=3.11, <3.14` | Linguagem de programação base para o desenvolvimento dos scripts |
-| **Infraestrutura** | **Docker** | `3.8 (Compose)` | Ferramenta de containerização que garante a paridade entre ambientes |
-| **Gerenciamento** | **Poetry** | `2.2.1` | Gerenciador de pacotes e ambientes virtuais utilizado para garantir a reprodutibilidade das dependências do projeto |
+| **Frontend/App** | **Streamlit** | `^1.51.0` | Framework para desenvolvimento de aplicativo web |
+| **Visualização** | **Plotly** | `^6.5.0` | Biblioteca para criação de gráficos dinâmicos e interativos |
+| **Análise de Dados** | **Pandas** | `^2.3.3` | Biblioteca para manipulação de dados |
+| **Comunicação** | **Requests** | `^2.32.5` | Biblioteca para requisições HTTP e consumo de API |
+| **Sessão** | **Cookies Controller**| `^0.0.3` | Biblioteca para gestão de estados da sessão |
+| **Linguagem** | **Python** | `>=3.11, <3.14` | Linguagem para desenvolvimento de scripts |
+| **Infraestrutura** | **Docker** | `3.8 (Compose)` | Ferramenta de containerização para paridade entre ambientes |
+| **Gerenciamento** | **Poetry** | `2.2.1` | Gerenciador de ambientes virtuais para isolamento de dependências |
 
 ### Integrações
 
-Este aplicativo é a camada de consumo final e depende da comunicação com a API para funcionamento.
+Este aplicativo web depende da comunicação com a API.
 
-- **Repositório da API:** https://github.com/postech-mlengineering/postech-ml-techchallenge-fase-1-api
+Link para o repositório da API: https://github.com/postech-mlengineering/postech-ml-techchallenge-fase-1-api
 
-- **Repositório do Airflow:** https://github.com/postech-mlengineering/postech-ml-techchallenge-fase-1-airflow/tree/main
+Link para o repositório do Airflow: https://github.com/postech-mlengineering/postech-ml-techchallenge-fase-1-airflow/tree/main
 
 ### Deploy
 
-O deploy deste aplicativo foi realizado via Streamlit Cloud, garantindo disponibilidade e integração contínua com este repositório.
+O deploy deste aplicativo web foi realizado via Streamlit Cloud.
 
-Link para o aplicativo: https://bookstoscrape.streamlit.app/
+Link para o aplicativo web: https://bookstoscrape.streamlit.app/
