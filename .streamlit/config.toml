@@ -23,3 +23,5 @@ headingFontSizes = ["2.5rem", "2rem", "1.5rem"]
 showSidebarNavigation = false
 [server]
 runOnSave = true
+[ui]
+hideTopBar = true

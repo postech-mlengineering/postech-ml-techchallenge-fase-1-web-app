@@ -31,10 +31,10 @@ def show() -> None:
     with col2:
         st.title('BooksToScrape | Menu')
     
-    _, col2_logout = st.columns([0.9, 0.1])
+    _, col2 = st.columns([0.9, 0.1])
 
     #botão de sair
-    with col2_logout:
+    with col2:
         if st.button('Sair', help='Sair do aplicativo', width='stretch'):
             remove_cookies()
             st.session_state.clear() 

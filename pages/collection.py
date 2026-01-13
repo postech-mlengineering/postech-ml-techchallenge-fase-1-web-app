@@ -10,6 +10,7 @@ from scripts.ml_utils import get_user_preferences
 from scripts import get_all_cookies, set_cookies
 from . import details
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -125,7 +126,7 @@ def show() -> None:
                     )
                     titulo = book.get('title', 'Sem título')
                     st.markdown(f'**{titulo[:25]}...**' if len(titulo) > 25 else f'**{titulo}**')
-                    st.caption(f"🔥 {book.get('similarity_score', 0):.2%} similar")
+                    st.caption(f'🔥 {book.get("similarity_score", 0):.2%} similar')
                     if st.button('Detalhes', key=f'btn_pref_{book.get("id")}_{idx+i}', width='stretch'):
                         details(book.get('id'))
     st.markdown('---')
