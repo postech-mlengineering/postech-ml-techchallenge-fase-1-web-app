@@ -1,7 +1,6 @@
 import logging
 import streamlit as st
 from scripts.books_utils import (
-    get_book_details, 
     get_top_rated,
     get_books_by_price_range,
     get_books_by_search
@@ -18,10 +17,9 @@ def show() -> None:
     '''Conteúdo da página de acervo'''
     _, _, user_id, _, logged_in, _ = get_all_cookies()
     if not logged_in:
-        st.session_state.page = 'login'
+        set_cookies('page', 'login')
         st.rerun()
-    #gerenciando sessao
-    set_cookies('page', 'collection')
+        
     #filtros
     st.sidebar.title('Filtros')
     title_genre_filter = st.sidebar.toggle('Título ou Gênero', value=False)
@@ -84,7 +82,6 @@ def show() -> None:
     with col2:
         if st.button('←', help='Voltar ao Menu', width='stretch'):
             set_cookies('page', 'menu')
-            st.session_state.page = 'menu'
             st.rerun()
     st.markdown('---')
 
@@ -137,7 +134,10 @@ def show() -> None:
     if 'books_collection' not in st.session_state:
         st.session_state.books_collection = get_top_rated(limit=10)
     books = st.session_state.books_collection
-    st.subheader('Melhores avaliações')
+    if st.session_state.get('filtros_ativos', False):
+        st.subheader('Resultados da busca')
+    else:
+        st.subheader('Top 10 avaliações')
     if not books or (isinstance(books, dict) and 'msg' in books):
         st.warning('Nenhum livro encontrado para os filtros aplicados')
     else:
@@ -160,6 +160,7 @@ def show() -> None:
                             book_title = book.get('title', 'Sem título')
                             st.markdown(f'**{book_title[:35]}...**' if len(book_title) > 35 else f'**{book_title}**')
                             st.write(f'£{book.get("price")}')
-                            if book.get('rating'): st.caption(f"⭐ {book.get('rating')}")
+                            if book.get('rating'): 
+                                st.caption(f"⭐ {book.get('rating')}")
                             if st.button('Detalhes', key=f'btn_{book.get("id")}_{i+j}', width='stretch'):
                                 details(book.get('id'))

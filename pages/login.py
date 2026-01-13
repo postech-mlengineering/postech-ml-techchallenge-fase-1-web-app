@@ -12,7 +12,7 @@ def show() -> None:
     _, _, _, _, logged_in, _ = get_all_cookies()
     if logged_in and st.session_state.get('page') != 'register':
         st.session_state.logged_in = True
-        st.session_state.page = 'menu'
+        set_cookies('page', 'menu')
         st.rerun()
 
     _, col2, _ = st.columns([.3, .4, .3])
@@ -27,19 +27,17 @@ def show() -> None:
         st.subheader('Entrar')
         with st.form('form_login'):
             user = st.text_input('Usuário')
-            password = st.text_input('Senha', type='password') # Corrigido typo password
-            _, col_btn = st.columns([.7, .3])
-            with col_btn:
-                entrar = st.form_submit_button('Entrar', width='stretch')
-            
-            if entrar:
-                access_token, error_msg = login(user, password)
-                if access_token:
+            password = st.text_input('Senha', type='password')
+            _, col2 = st.columns([.7, .3])
+            with col2:
+                btn_login = st.form_submit_button('Entrar', width='stretch')
+            if btn_login:
+                success, error_msg = login(user, password)
+                if success:
                     st.rerun()
                 else:
                     st.error(error_msg)
         st.write('Não possui uma conta?')
         if st.button('Cadastre-se', width='stretch'):
             set_cookies('page', 'register') 
-            st.session_state.page = 'register'
             st.rerun()

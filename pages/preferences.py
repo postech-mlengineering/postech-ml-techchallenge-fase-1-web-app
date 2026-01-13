@@ -15,13 +15,13 @@ def show() -> None:
     #gerenciando sessao
     _, _, _, _, logged_in, _ = get_all_cookies()
     if not logged_in:
-        st.session_state.page = 'login'
+        set_cookies('page', 'login')
         st.rerun()
-    #gerenciando sessao
-    set_cookies('page', 'preferences')
+
     #inicializa o estado do gênero
     if 'selected_genre' not in st.session_state:
         st.session_state.selected_genre = None
+        
     #título
     col1, col2 = st.columns([.05, .95])
     with col1:
@@ -59,8 +59,8 @@ def show() -> None:
 
     #acervo
     else:
-        col1, _ = st.columns([0.1, 0.9])
-        with col1:
+        _, col2 = st.columns([0.9, 0.1])
+        with col2:
             if st.button('←', help='Voltar aos Gêneros', width='stretch'):
                 st.session_state.selected_genre = None
                 st.rerun()

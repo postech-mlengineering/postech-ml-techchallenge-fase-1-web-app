@@ -13,10 +13,9 @@ def show() -> None:
     '''Conteúdo da página de estatísticas'''
     _, _, user_id, _, logged_in, _ = get_all_cookies()
     if not logged_in:
-        st.session_state.page = 'login'
+        set_cookies('page', 'login')
         st.rerun()
-    #gerenciando sessao
-    set_cookies('page', 'stats')
+
     #título
     col1, col2 = st.columns([.05, .95])
     with col1:
@@ -29,7 +28,6 @@ def show() -> None:
     with col2:
         if st.button('←', help='Voltar ao Menu', width='stretch'):
             set_cookies('page', 'menu')
-            st.session_state.page = 'menu'
             st.rerun()
     st.markdown('---')
 

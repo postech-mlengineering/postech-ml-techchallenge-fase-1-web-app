@@ -28,19 +28,18 @@ def login(usuario: str, senha: str) -> Tuple[Optional[str], Optional[str]]:
             
             set_all_cookies(access_token, refresh_token, user_id, usuario, 'menu')
             
-            return access_token, None
+            return True, None
         try:
-            data = response.json()
-            error_msg = data.get('error', 'Credenciais inválidas.')
-        except Exception:
-            error_msg = f'Erro no servidor (Status {response.status_code})'
-        return None, error_msg
+            error_msg = response.json().get('error', 'Credenciais inválidas.')
+        except:
+            error_msg = f'Erro no servidor ({response.status_code})'
+        return False, error_msg
     except requests.exceptions.ConnectionError:
         logger.error(f'Falha de conexão: {URL_BASE}')
-        return None, 'Não foi possível conectar ao servidor.'
+        return False, 'Não foi possível conectar ao servidor.'
     except Exception as e:
         logger.error(f'error: {e}')
-        return None, f'error: {str(e)}'
+        return False, f'error: {str(e)}'
 
 
 def register(usuario: str, senha: str) -> Tuple[bool, Union[str, Dict[str, Any]]]:
@@ -70,14 +69,17 @@ def register(usuario: str, senha: str) -> Tuple[bool, Union[str, Dict[str, Any]]
             refresh_token = data.get('refresh_token')
             user_id = data.get('user_id')
             
-            if access_token:
-                set_all_cookies(access_token, refresh_token, user_id, usuario, 'menu')
-                
+            set_all_cookies(access_token, refresh_token, user_id, usuario, 'menu')
+    
             return True, data
-        return False, data.get('error', 'Falha ao realizar o registro.')
+        try:
+            error_msg = response.json().get('error', 'Falha ao realizar o registro.')
+        except:
+            error_msg = f'Erro no servidor ({response.status_code})'
+        return False, error_msg
     except requests.exceptions.ConnectionError:
         logger.error(f'Falha de conexão em register: {URL_BASE}')
         return False, 'Erro de conexão: servidor offline.'
     except Exception as e:
-        logger.error(f'Erro inesperado no registro: {e}')
-        return False, f'Erro inesperado: {str(e)}'
+        logger.error(f'error: {e}')
+        return False, f'error: {str(e)}'
