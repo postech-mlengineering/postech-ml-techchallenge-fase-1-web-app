@@ -134,9 +134,10 @@ def show() -> None:
     if 'books_collection' not in st.session_state:
         st.session_state.books_collection = get_top_rated(limit=10)
     books = st.session_state.books_collection
-    if st.session_state.get('filtros_ativos', False):
+    if st.session_state.get('filtros_ativos', False) and books != get_top_rated(limit=10):
         st.subheader('Resultados da busca')
     else:
+        st.session_state.filtros_ativos = False
         st.subheader('Top 10 avaliações')
     if not books or (isinstance(books, dict) and 'msg' in books):
         st.warning('Nenhum livro encontrado para os filtros aplicados')
