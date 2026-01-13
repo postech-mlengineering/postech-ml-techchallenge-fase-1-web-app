@@ -1,26 +1,27 @@
 import logging
 import streamlit as st
 from scripts.books_utils import (
-    get_books_by_search, 
     get_book_details, 
+    get_top_rated,
     get_books_by_price_range,
-    get_top_rated
+    get_books_by_search
 )
 from scripts.genres_utils import get_all_genres
 from scripts.ml_utils import get_user_preferences 
-from scripts import get_cookies, set_cookies
-
+from scripts import get_all_cookies, set_cookies
+from . import details
 
 logger = logging.getLogger(__name__)
 
 
 def show() -> None:
     '''Conteúdo da página de acervo'''
+    _, _, user_id, _, logged_in, _ = get_all_cookies()
+    if not logged_in:
+        st.session_state.page = 'login'
+        st.rerun()
     #gerenciando sessao
     set_cookies('page', 'collection')
-    token = get_cookies('access_token')
-    user_id = get_cookies('user_id')
-
     #filtros
     st.sidebar.title('Filtros')
     title_genre_filter = st.sidebar.toggle('Título ou Gênero', value=False)
@@ -36,7 +37,7 @@ def show() -> None:
             if title_genre_filter:
                 st.sidebar.markdown('### Título ou Gênero') 
                 title = st.sidebar.text_input('Título', placeholder='Ex: The White Queen', key='input_title')
-                genres = get_all_genres(token)
+                genres = get_all_genres()
                 options = ['Todas'] + [c['genre'] for c in genres] if genres else ['Todas']
                 option = st.sidebar.selectbox('Gênero', options=options, key='input_genre')
             if title_genre_filter and price_range_filter:
@@ -50,14 +51,14 @@ def show() -> None:
                 genre = None if option == 'Todas' else option
                 
                 if price_range_filter and not title_genre_filter:
-                    st.session_state.books_collection = get_books_by_price_range(token, p_min, p_max)
+                    st.session_state.books_collection = get_books_by_price_range(p_min, p_max)
                 elif title_genre_filter and not price_range_filter:
                     if not title and not genre:
-                        st.session_state.books_collection = get_top_rated(token, limit=10)
+                        st.session_state.books_collection = get_top_rated(limit=10)
                     else:
-                        st.session_state.books_collection = get_books_by_search(token, title=title or None, genre=genre)
+                        st.session_state.books_collection = get_books_by_search(title=title or None, genre=genre)
                 elif price_range_filter and title_genre_filter:
-                    books_raw = get_books_by_price_range(token, p_min, p_max)
+                    books_raw = get_books_by_price_range(p_min, p_max)
                     if isinstance(books_raw, list):
                         st.session_state.books_collection = [
                             b for b in books_raw 
@@ -67,7 +68,7 @@ def show() -> None:
                 st.session_state.filtros_ativos = True
     else:
         if st.session_state.get('filtros_ativos', False):
-            st.session_state.books_collection = get_top_rated(token, limit=10)
+            st.session_state.books_collection = get_top_rated(limit=10)
             st.session_state.filtros_ativos = False
             st.rerun()
         st.sidebar.info('Ative os filtros acima para consulta')
@@ -83,6 +84,7 @@ def show() -> None:
     with col2:
         if st.button('←', help='Voltar ao Menu', width='stretch'):
             set_cookies('page', 'menu')
+            st.session_state.page = 'menu'
             st.rerun()
     st.markdown('---')
 
@@ -90,7 +92,7 @@ def show() -> None:
     st.subheader('Recomendados para você! ✨')
     with st.container(border=True):
         user_id = int(user_id) if user_id else 0
-        prefs = get_user_preferences(token, user_id)
+        prefs = get_user_preferences(user_id)
         st.session_state.user_prefs = prefs if isinstance(prefs, list) else []
         if 'pref_index' not in st.session_state:
             st.session_state.pref_index = 0
@@ -128,12 +130,12 @@ def show() -> None:
                     st.markdown(f'**{titulo[:25]}...**' if len(titulo) > 25 else f'**{titulo}**')
                     st.caption(f"🔥 {book.get('similarity_score', 0):.2%} similar")
                     if st.button('Detalhes', key=f'btn_pref_{book.get("id")}_{idx+i}', width='stretch'):
-                        details(book.get('id'), token)
+                        details(book.get('id'))
     st.markdown('---')
     #acervo
     #inicializa o catálogo no estado da sessão
     if 'books_collection' not in st.session_state:
-        st.session_state.books_collection = get_top_rated(token, limit=10)
+        st.session_state.books_collection = get_top_rated(limit=10)
     books = st.session_state.books_collection
     st.subheader('Melhores avaliações')
     if not books or (isinstance(books, dict) and 'msg' in books):
@@ -160,33 +162,4 @@ def show() -> None:
                             st.write(f'£{book.get("price")}')
                             if book.get('rating'): st.caption(f"⭐ {book.get('rating')}")
                             if st.button('Detalhes', key=f'btn_{book.get("id")}_{i+j}', width='stretch'):
-                                details(book.get('id'), token)
-
-
-@st.dialog('Detalhes')
-def details(book_id: int, token: str) -> None:
-    '''
-    Exibe uma janela de diálogo com as informações detalhadas de um livro.
-
-    Args:
-        book_id (int): O identificador único do livro.
-        token (str): O token de autenticação para a requisição da API.
-
-    Returns:
-        None
-    '''
-    try:
-        detalhes = get_book_details(token, book_id)
-        if detalhes:
-            c1, c2 = st.columns([1, 2])
-            with c1:
-                st.image(detalhes.get('image_url', ''), width='stretch')
-            with c2:
-                st.subheader(detalhes.get('title'))
-                st.write(f'**Gênero:** {detalhes.get("genre")}')
-                st.write(f'**Preço:** £{detalhes.get("price_incl_tax")}')
-            st.divider()
-            st.write(detalhes.get('description', 'Sem descrição disponível.'))
-    except Exception as e:
-        logger.exception(f'error: {e}')
-        st.error('Erro ao carregar detalhes.')
+                                details(book.get('id'))

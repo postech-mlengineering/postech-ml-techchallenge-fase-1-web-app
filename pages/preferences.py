@@ -1,8 +1,9 @@
 import logging
 import streamlit as st
-from scripts.books_utils import get_book_details, get_top_rated
+from scripts.books_utils import get_top_rated
 from scripts.ml_utils import input_user_preferences
-from scripts import get_cookies, set_cookies
+from scripts import get_all_cookies, set_cookies
+from . import details
 import time
 
 
@@ -12,9 +13,12 @@ logger = logging.getLogger(__name__)
 def show() -> None:
     '''Conteúdo da página de personalização'''
     #gerenciando sessao
-    token = get_cookies('access_token')
+    _, _, _, _, logged_in, _ = get_all_cookies()
+    if not logged_in:
+        st.session_state.page = 'login'
+        st.rerun()
+    #gerenciando sessao
     set_cookies('page', 'preferences')
-    
     #inicializa o estado do gênero
     if 'selected_genre' not in st.session_state:
         st.session_state.selected_genre = None
@@ -30,7 +34,7 @@ def show() -> None:
 
     #inicializa o acervo completo
     if 'books_collection' not in st.session_state:
-        st.session_state.books_collection = get_top_rated(token)
+        st.session_state.books_collection = get_top_rated()
     
     all_books = st.session_state.books_collection
 
@@ -93,10 +97,10 @@ def show() -> None:
                                     st.caption(f'⭐ {book.get("rating")}')
                                 
                                 if st.button('Detalhes', key=f'btn_{book_id}_{i+j}', width='stretch'):
-                                    details(book_id, token)
+                                    details(book_id)
                                 if st.button('Favoritar', key=f'ml_{book_id}_{i+j}', width='stretch', type='primary'):
                                     try:
-                                        _, error_msg = input_user_preferences(token, book_id)
+                                        _, error_msg = input_user_preferences(book_id)
                                         if error_msg:
                                             st.error(f'Erro: {error_msg}')
                                         else:
@@ -107,26 +111,8 @@ def show() -> None:
                                                     del st.session_state[key]
                                             time.sleep(2)
                                             set_cookies('page', 'menu') 
+                                            st.session_state.page = 'menu' # Sincronização necessária
                                             st.rerun()
                                     except Exception as e:
                                         logger.error(f'Erro ao salvar preferência: {e}')
                                         st.error('Erro ao processar sua escolha.')
-
-
-@st.dialog('Detalhes')
-def details(book_id: int, token: str) -> None:
-    try:
-        detalhes = get_book_details(token, book_id)
-        if detalhes:
-            c1, c2 = st.columns([1, 2])
-            with c1:
-                st.image(detalhes.get('image_url', ''), width='stretch')
-            with c2:
-                st.subheader(detalhes.get('title'))
-                st.write(f'**Gênero:** {detalhes.get("genre")}')
-                st.write(f'**Preço:** £{detalhes.get("price_incl_tax")}')
-            st.divider()
-            st.write(detalhes.get('description', 'Sem descrição disponível.'))
-    except Exception as e:
-        logger.exception(f'error: {e}')
-        st.error('Erro ao carregar detalhes.')

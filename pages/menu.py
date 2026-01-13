@@ -1,6 +1,6 @@
 import logging
 import streamlit as st
-from scripts import remove_cookies, set_cookies
+from scripts import remove_cookies, set_cookies, get_all_cookies
 
 
 logger = logging.getLogger(__name__)
@@ -8,6 +8,10 @@ logger = logging.getLogger(__name__)
 
 def show() -> None:
     '''Conteúdo da página de menu'''
+    _, _, _, _, logged_in, _ = get_all_cookies()
+    if not logged_in:
+        st.session_state.page = 'login'
+        st.rerun()
     #css para ocultar sidebar
     st.markdown(
         '''
@@ -19,23 +23,23 @@ def show() -> None:
         ''',
         unsafe_allow_html=True
     )
+    
     #título
     col1, col2 = st.columns([.05, .95])
     with col1:
         st.image('img/collection.png', width='stretch')
     with col2:
         st.title('BooksToScrape | Menu')
-    _, col2 = st.columns([0.9, 0.1])
+    
+    _, col2_logout = st.columns([0.9, 0.1])
 
     #botão de sair
-    with col2:
+    with col2_logout:
         if st.button('Sair', help='Sair do aplicativo', width='stretch'):
-            remove_cookies()
+            remove_cookies() # Limpa todos os cookies (tokens, id, page, etc)
             st.session_state.clear() 
             st.rerun()
-
     st.markdown('---')
-
     #opções
     col1, col2 = st.columns(2)
     with col1:
@@ -53,6 +57,7 @@ def show() -> None:
                 )
             if st.button('Acessar', width='stretch', key='btn_coll'):
                 set_cookies('page', 'collection')
+                st.session_state.page = 'collection'
                 st.rerun()
     with col2:
         with st.container(border=True):
@@ -69,4 +74,5 @@ def show() -> None:
                 )
             if st.button('Acessar', width='stretch', key='btn_stats'):
                 set_cookies('page', 'stats')
+                st.session_state.page = 'stats'
                 st.rerun()

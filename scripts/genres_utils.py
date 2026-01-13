@@ -1,28 +1,23 @@
 import logging
-import requests
-from scripts import URL_BASE
+from scripts import api_request
 from typing import List, Dict
 
 
 logger = logging.getLogger(__name__)
 
 
-def get_all_genres(token: str) -> List[Dict[str, str]]:
+def get_all_genres() -> List[Dict[str, str]]:
     '''
-    Recupera a lista de todas os gêneros de livros cadastradas.
-
-    Args:
-        token: Token JWT de autenticação.
+    Retorna lista com todos os gêneros de livros cadastrados.
 
     Returns:
-        Uma lista de dicionários contendo os gêneros.
+        Uma lista de dicionários contendo os gêneros
     '''
-    headers = {'Authorization': f'Bearer {token}'}
     try:
-        response = requests.get(f'{URL_BASE}/genres', headers=headers, timeout=5)
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        logger.error(f'Erro de requisição: {e}')
+        response = api_request('GET', '/genres')
+        
+        if response.status_code == 200:
+            return response.json()
         return []
     except Exception as e:
         logger.error(f'error: {e}')

@@ -1,28 +1,24 @@
 import logging
-import requests
-from scripts import URL_BASE
+from scripts import api_request
 from typing import List, Dict, Optional, Any
 
 
 logger = logging.getLogger(__name__)
 
 
-def get_stats_overview(token: str) -> Optional[Dict[str, Any]]:
+def get_stats_overview() -> Optional[Dict[str, Any]]:
     '''
-    Recupera indicadores gerais e a distribuição de avaliações da coleção.
-
-    Args:
-        token: Token JWT de autenticação.
+    Retorna indicadores gerais e a distribuição de avaliações do acervo.
 
     Returns:
         Um dicionário contendo:
-            - avg_price (float): Média de preço de todos os livros.
-            - total_books (int): Quantidade total de registros.
-            - rating_distribution (list): Lista de dicts com 'rating' e 'count'.
+            - avg_price (float): média de preço de todos os livros
+            - total (int): quantidade total de registros
+            - rating_distribution (list): Lista de dicts com 'rating' e 'count'
     '''
-    headers = {'Authorization': f'Bearer {token}'}
     try:
-        response = requests.get(f'{URL_BASE}/stats/overview', headers=headers, timeout=5)
+        response = api_request('GET', '/stats/overview')
+        
         if response.status_code == 200:
             return response.json()
         
@@ -33,21 +29,18 @@ def get_stats_overview(token: str) -> Optional[Dict[str, Any]]:
         return None
 
 
-def get_stats_by_genre(token: str) -> List[Dict[str, Any]]:
+def get_stats_by_genre() -> List[Dict[str, Any]]:
     '''
-    Recupera métricas detalhadas agrupadas por gênero.
-
-    Args:
-        token: Token JWT de autenticação.
+    Retorna métricas detalhadas agrupadas por gênero.
 
     Returns:
         Uma lista de dicionários, onde cada item contém:
-            - genre (str): Nome do gênero.
-            - avg_price (float): Média de preço naquela categoria.
+            - genre (str): Nome do gênero
+            - avg_price (float): Média de preço naquela categoria
     '''
-    headers = {'Authorization': f'Bearer {token}'}
     try:
-        response = requests.get(f'{URL_BASE}/stats/genres', headers=headers, timeout=5)
+        response = api_request('GET', '/stats/genres')
+        
         if response.status_code == 200:
             return response.json()
         
