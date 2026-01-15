@@ -25,11 +25,7 @@ def show() -> None:
     )
 
     #título
-    col1, col2 = st.columns([.05, .95])
-    with col1:
-        st.image('img/collection.png', width='stretch')
-    with col2:
-        st.title('BooksToScrape | Menu')
+    st.title('BooksToScrape | Menu')
     
     _, col2 = st.columns([0.9, 0.1])
 
@@ -40,38 +36,38 @@ def show() -> None:
             st.session_state.clear() 
             st.rerun()
     st.markdown('---')
-    
+
     #opções
     col1, col2 = st.columns(2)
     with col1:
         with st.container(border=True):
             st.subheader('Acervo')
-            img_col, text_col = st.columns([0.4, 0.6])
-            with img_col:
-                st.image('img/collection.png', width='stretch')
-            with text_col:
-                st.write(
-                    '''
-                        Navegue pelo acervo completo, use filtros de preço e
-                        gênero e veja recomendações baseadas no seu perfil.
-                    '''
-                )
-            if st.button('Acessar', width='stretch', key='btn_coll'):
+            #img_col, text_col = st.columns([0.4, 0.6])
+            #with img_col:
+            #    st.image('img/collection.png', width='stretch')
+            #with text_col:
+            st.write(
+                '''
+                    Navegue pelo acervo completo, utilize filtros e 
+                    veja recomendações baseadas no seu favorito.
+                '''
+            )
+            if st.button('Acessar', help='Acessar Acervo', width='stretch', key='btn_coll'):
                 set_cookies('page', 'collection')
                 st.rerun()
     with col2:
         with st.container(border=True):
             st.subheader('Estatísticas')
-            img_col, text_col = st.columns([0.4, 0.6])
-            with img_col:
-                st.image('img/stats.png', width='stretch')
-            with text_col:
-                st.write(
-                    '''
-                        Visualize análises sobre preços, gêneros e
-                        distribuição de avaliações de todo o acervo.
-                    '''
-                )
-            if st.button('Acessar', width='stretch', key='btn_stats'):
+            #img_col, text_col = st.columns([0.4, 0.6])
+            #with img_col:
+            #    st.image('img/stats.png', width='stretch')
+            #with text_col:
+            st.write(
+                '''
+                    Visualize análises sobre preços, gêneros e
+                    distribuição de avaliações de todo o acervo.
+                '''
+            )
+            if st.button('Acessar', help='Acessar Estatísticas', width='stretch', key='btn_stats'):
                 set_cookies('page', 'stats')
                 st.rerun()

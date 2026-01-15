@@ -15,7 +15,7 @@ def show() -> None:
         with col2:
             col1, col2 = st.columns([.22, .78])
             with col1:
-                st.image('img/collection.png', width='stretch')
+                st.image('img/logo.png', width='stretch')
             with col2:
                 st.title('BooksToScrape')
         
