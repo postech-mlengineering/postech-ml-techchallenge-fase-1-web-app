@@ -8,7 +8,7 @@ Como resultado, a solução consolidou uma experiência de navegação completa 
 
 O diagrama abaixo ilustra a arquitetura do projeto na sua integridade e com suas principais funcionalidades:
 
-<br><p align='center'><img src='https://github.com/postech-mlengineering/postech-ml-engineering-fase-1-tech-challenge-api/blob/9cc654c78d0fbc3a3b8c7f85d4841364127b5cdd/docs/arquitetura.svg' alt='Arquitetura'></p>
+<br><p align='center'><img src='https://github.com/postech-mlengineering/postech-ml-engineering-fase-1-tech-challenge-web-app/blob/f5c7fcc0ee041491799bbc4a9717ad7699b205c6/docs/arquitetura.svg' alt='Arquitetura'></p>
 
 ### Pré-requisitos
 
