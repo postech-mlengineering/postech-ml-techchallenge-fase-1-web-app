@@ -1,6 +1,6 @@
 # Repositório do Aplicativo Web para o Tech Challenge da Fase 1 da Pós-Graduação em Machine Learning Engineering da FIAP
 
-Este repositório consiste em um aplicativo web desenvolvido com Streamlit cujo objetivo é disponibilizar uma interface de usuário intuitiva e responsiva, projetada para o consumo das funcionalidades da API BooksToScrape.
+Este repositório consiste em um aplicativo web desenvolvido com Streamlit cujo objetivo é disponibilizar uma interface de usuário para o consumo das funcionalidades da API BooksToScrape.
 
 Como resultado, a solução consolidou uma experiência de navegação completa que abrange o gerenciamento de identidade, através de fluxos de cadastro e login e a exploração dinâmica do catálogo por meio de filtros de preço, gênero e título. Ademais, o aplicativo integra-se ao motor de recomendação para fornecer recomendações personalizadas e disponibiliza um dashboard para a visualização de indicadores do acervo.
 
@@ -12,12 +12,7 @@ O diagrama abaixo ilustra a arquitetura do projeto na sua integridade e com suas
 
 ### Pré-requisitos
 
-Certifique-se de ter o Python 3.11 e o Poetry instalados.
-
-Para instalar o Poetry, use o método oficial:
-```bash
-curl -sSL https://install.python-poetry.org | python3 -
-```
+Certifique-se de ter o Python 3.11, o Poetry 2.1.1 e o Docker 29.1.1 (opcional) instalados em seu sistema.
 
 ### Instalação
 
@@ -26,12 +21,27 @@ Clone o repositório e instale as dependências:
 ```bash
 git clone https://github.com/jorgeplatero/postech-ml-techchallenge-fase-1-streamlit.git
 cd postech-ml-techchallenge-fase-1-streamlit
+
 poetry install
 ```
 
 ### Como Rodar a Aplicação
 
 **Docker:**
+
+1. Configure as variável de ambiente criando um arquivo .env na raiz do projeto e preencha com o conteúdo abaixo:
+
+```bash
+API_URL=http://postech_mlengineering_api:5000
+```
+
+2. Crie a rede externa (necessária para a comunicação entre os serviços):
+
+```bash
+docker network create postech_mlengineering_api
+```
+
+3. Inicie a aplicação:
 
 ```bash
 docker-compose up --build
@@ -45,7 +55,7 @@ poetry run streamlit run main.py
 
 O aplicativo estará disponível em `http://localhost:8501`. 
 
-Certifique-se de que a API esteja em produção para que o aplicativo possa autenticar e buscar os dados.
+Certifique-se de que a API esteja em execução para que o aplicativo possa autenticar e buscar os dados.
 
 ### Funcionalidades
 
@@ -53,26 +63,26 @@ Certifique-se de que a API esteja em produção para que o aplicativo possa aute
 
 O aplicativo implementa um fluxo completo de controle de acesso e persistência de sessão.
 
-*   **Cadastro e Login:** interfaces dedicadas para criação de novas contas e autenticação de usuários existentes, integradas ao sistema de permissões da API
+- **Cadastro e Login:** página dedicada para registro de novos usuários e autenticação de usuários existentes
 
 #### Acervo
 
-Módulo projetado para o consumo dinâmico do catálogo de livros com foco em experiência de usuário (UX).
+Página desenvolvida para o consumo do acervo.
 
-*   **Filtros:** painel latera com controles para alternar entre buscas por título/gênero e/ou faixa de preço
-*   **Navegação:** exibição do catálogo organizada em grids responsivos, apresentando capas, preços e avaliações
-*   **Detalhamento:** uso de janelas de diálogo para exibição de informações técnicas completas e descrições semânticas sem perda de contexto da navegação
-*   **Recomendações:** carrossel paginado e interativo que apresenta livros com os maiores pontuações de similaridade calculados pelo modelo TF-IDF
+- **Filtros:** painel lateral com controles para alternar entre buscas por título/gênero e/ou faixa de preço
+- **Navegação:** exibição do acervo organizada em grids responsivos, apresentando capas, preços e avaliações
+- **Detalhamento:** uso de janelas de diálogo para exibição de informações completas de livro especificado sem perda de contexto da navegação
+- **Recomendações:** carrossel paginado e interativo que apresenta recomendações de livros com base na preferência indicada pelo o usuário
 
 #### Personalização 
 
-Interface de interação direta com a camada de inteligência da aplicação para personalização do perfil.
+Página integrada com o motor de recomendação da API.
 
-*   **Preferências:** fluxo guiado onde o usuário seleciona gêneros de interesse e favorita título para alimentar o motor de recomendação
+- **Preferências:** fluxo guiado onde o usuário seleciona gêneros de interesse e favorita título para alimentar o motor de recomendação
 
 #### Estatísticas
 
-Painel analítico para visualização de métricas de negócio e distribuição do acervo.
+Página com painel para visualização de métricas fornecidas pela API.
 
 ### Tecnologias
 
@@ -84,7 +94,7 @@ Painel analítico para visualização de métricas de negócio e distribuição 
 | **Comunicação** | **Requests** | `^2.32.5` | Biblioteca para requisições HTTP e consumo de API |
 | **Sessão** | **Cookies Controller**| `^0.0.3` | Biblioteca para gestão de estados da sessão |
 | **Linguagem** | **Python** | `>=3.11, <3.14` | Linguagem para desenvolvimento de scripts |
-| **Infraestrutura** | **Docker** | `3.8 (Compose)` | Ferramenta de containerização para paridade entre ambientes |
+| **Infraestrutura** | **Docker** | `29.1.1` | Ferramenta de containerização para paridade entre ambientes |
 | **Gerenciamento** | **Poetry** | `2.2.1` | Gerenciador de ambientes virtuais para isolamento de dependências |
 
 ### Integrações
@@ -97,18 +107,36 @@ Link para o repositório do Airflow: https://github.com/postech-mlengineering/po
 
 ### Deploy
 
-A arquitetura e o deploy foram concebidos para suportar um ecossistema distribuído, utilizando a AWS (EC2) como provedor de infraestrutura e Docker para a padronização e o isolamento dos ambientes de execução.
+A arquitetura e o deploy foram concebidos para suportar um ecossistema distribuído, utilizando uma instância EC2 na AWS como infraestrutura e Docker para a padronização e o isolamento dos ambientes.
 
-A solução é composta por três camadas principais de containers integrados:
+A solução é composta por três camadas de containers integrados:
 
-* **Orquestração (Apache Airflow)**: implementada em containers dedicados, esta camada é responsável pelo agendamento e execução dos pipelines de dados, acionando as rotas de /scrape e /training-data da API
+- **Orquestração (Apache Airflow)**: implementada em containers dedicados, esta camada é responsável pelo agendamento e execução dos pipelines de dados, acionando as rotas de /scrape e /training-data da API
 
-* **API (Flask)**: é o coração da arquitetura, onde a lógica de negócio e o motor de recomendações reside. Esta camada interage com o site Books To Scrape para aquisição de dados via web scraping e expõe endpoints para consumo
+- **API (Flask)**: é o coração da arquitetura. Esta camada interage com o site Books To Scrape para aquisição de dados via web scraping e expõe endpoints para consumo
 
-* **Consumo (Streamlit)**: é a interface web que consome os serviços da API, permitindo que os usuários finais interajam com a API
+- **Consumo (Web App Streamlit)**: é a interface web que consome os serviços da API, permitindo que os usuários finais interajam com a API
 
-A comunicação entre os containers é otimizada por meio da atribuição de rede comum no Docker, permitindo que os serviços interajam através de nomes de host predefinidos em vez de IPs dinâmicos, elevando a eficiência e performance ao processar o tráfego de dados localmente na interface do host, o que reduz a latência e elimina custos de saída.
+A comunicação entre os containers é otimizada via Docker network, permitindo a interação entre serviços através de nomes de host em vez de IPs dinâmicos. Essa configuração reduz a latência, elimina custos de tráfego externo e melhora a eficiência ao processar as requisições localmente no host.
+
+Os seviços podem ser acessados nos endereços abaixo:
+
+- **API**: http://18.208.50.37:5000
+- **Web App Streamlit**: http://18.208.50.37:8501
+- **Apache Airflow**: http://18.208.50.37:8080
 
 #### Persistência
 
-A camada de persistência é estruturada por meio de um banco de dados relacional gerenciado via Supabase (integrado à plataforma Vercel). Esta infraestrutura é responsável pela centralização do acervo de livros, pelo histórico de preferências de usuários e pela persistência dos logs de auditoria.
+A camada de persistência foi definida em um banco de dados gerenciado via Supabase (integrado à plataforma Vercel). Esta infraestrutura é responsável pela centralização do acervo de livros, pelo histórico de preferências de usuários e pela persistência dos logs de auditoria.
+
+### Link da Apresentação
+
+https://youtu.be/mSAH299OHDs
+
+### Colaboradores
+
+[Jorge Platero](https://github.com/jorgeplatero)
+
+[Leandro Delisposti](https://github.com/LeandroDelisposti)
+
+[Hugo Rodrigues](https://github.com/Nokard)
