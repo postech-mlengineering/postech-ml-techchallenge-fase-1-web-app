@@ -2,7 +2,7 @@
 
 Este repositório consiste em um aplicativo web desenvolvido com Streamlit cujo objetivo é disponibilizar uma interface de usuário para o consumo das funcionalidades da API BooksToScrape.
 
-Como resultado, a solução consolidou uma experiência de navegação completa que abrange o gerenciamento de identidade, através de fluxos de cadastro e login e a exploração dinâmica do catálogo por meio de filtros de preço, gênero e título. Ademais, o aplicativo integra-se ao motor de recomendação para fornecer recomendações personalizadas e disponibiliza um dashboard para a visualização de indicadores do acervo.
+A solução consolidou uma experiência de navegação que abrange o gerenciamento de identidade, através de fluxos de cadastro de usuário e login e a exploração do acervo por meio de filtros. Ademais, o aplicativo integra-se ao motor de recomendação para fornecer recomendações personalizadas e disponibiliza um dashboard para a visualização de indicadores do acervo.
 
 ### Arquitetura
 
